@@ -182,8 +182,8 @@ static int _recursive_rmdir(char *dirname, dev_t pdev,
 }
 
 /* we have two different magic values for overlayfs, yay */
-#define OVERLAYFS_SUPER_MAGIC 0x794c764f
-#define OVERLAY_SUPER_MAGIC 0x794c7630
+#define OVERLAYFS_SUPER_MAGIC_1 0x794c764f
+#define OVERLAYFS_SUPER_MAGIC_2 0x794c7630
 /*
  * In overlayfs, st_dev is unreliable.  so on overlayfs we don't do
  * the lxc_rmdir_onedev()
@@ -194,8 +194,8 @@ static bool is_native_overlayfs(const char *path)
 
 	if (statfs(path, &sb) < 0)
 		return false;
-	if (sb.f_type == OVERLAYFS_SUPER_MAGIC ||
-			sb.f_type == OVERLAY_SUPER_MAGIC)
+	if (sb.f_type == OVERLAYFS_SUPER_MAGIC_1 ||
+			sb.f_type == OVERLAYFS_SUPER_MAGIC_2)
 		return true;
 	return false;
 }
