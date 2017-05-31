@@ -684,7 +684,8 @@ AC_PROG_SED
 LXC_CHECK_TLS
 
 if test "x$GCC" = "xyes"; then
-	CFLAGS="$CFLAGS -Wall"
+	LDFLAGS="$LDFLAGS -fPIE -pie"
+	CFLAGS="$CFLAGS -Wall -fPIE"
 	if test "x$enable_werror" = "xyes"; then
 		CFLAGS="$CFLAGS -Werror"
 	fi
