@@ -3381,6 +3381,7 @@ int lxc_assign_network(const char *lxcpath, char *lxcname,
 	return 0;
 }
 
+#if HAVE_LIBCAP && LIBCAP_SUPPORTS_FILE_CAPABILITIES
 static int write_id_mapping(enum idtype idtype, pid_t pid, const char *buf,
 			    size_t buf_size)
 {
@@ -3406,7 +3407,9 @@ static int write_id_mapping(enum idtype idtype, pid_t pid, const char *buf,
 		SYSERROR("writing id mapping");
 	return ret < 0 ? ret : closeret;
 }
+#endif
 
+#if HAVE_LIBCAP && LIBCAP_SUPPORTS_FILE_CAPABILITIES
 /* Check whether a binary exist and has either CAP_SETUID, CAP_SETGID or both. */
 static int idmaptool_on_path_and_privileged(const char *binary, cap_value_t cap)
 {
@@ -3466,9 +3469,11 @@ cleanup:
 	free(path);
 	return fret;
 }
+#endif
 
 int lxc_map_ids(struct lxc_list *idmap, pid_t pid)
 {
+	#if HAVE_LIBCAP && LIBCAP_SUPPORTS_FILE_CAPABILITIES
 	struct id_map *map;
 	struct lxc_list *iterator;
 	enum idtype type;
@@ -3552,6 +3557,9 @@ int lxc_map_ids(struct lxc_list *idmap, pid_t pid)
 
 	free(buf);
 	return ret;
+	#else
+	return -1;
+	#endif
 }
 
 /*
